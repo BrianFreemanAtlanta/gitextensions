@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
                 cbDeleteNewFilesAndDirectories.Enabled = true; // A mix of types, so enable the checkbox.
             }
 
-            btnCancel.Focus();
+            btnCancel.Select(); // Focus doesn't stick while form is loading/not shown, select does.
         }
 
         /// <summary>
