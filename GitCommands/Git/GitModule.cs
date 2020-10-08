@@ -1380,7 +1380,6 @@ namespace GitCommands
                     "--"
                 }
                 .BuildBatchArgumentsForFiles(files));
-
         }
 
         /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>
