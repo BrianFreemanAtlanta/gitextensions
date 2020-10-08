@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -117,6 +118,26 @@ namespace GitCommandsTests
             const string s = "Hello, World!";
 
             Assert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
+        }
+
+        [TestCase(new string[] { "abc", "def" }, "rm -- \"abc\" \"def\"")]
+        public void RemoveFiles_shouldWorkAsExpected(string[] files, string args)
+        {
+            // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
+            using (var moduleTestHelper = new GitModuleTestHelper())
+            {
+                var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+                string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
+                _executable.StageOutput(args, dummyCommandOutput);
+                var result = gitModule.RemoveFiles(files.ToList(), false);
+                Assert.AreEqual(dummyCommandOutput, result);
+            }
+        }
+
+        [TestCase(new string[] { }, "")]
+        public void RemoveFiles_should_handle_empty_list(string[] files, string expectedOutput)
+        {
+            Assert.AreEqual(expectedOutput, _gitModule.RemoveFiles(files?.ToList(), false));
         }
 
         [TestCase(null, null)]
